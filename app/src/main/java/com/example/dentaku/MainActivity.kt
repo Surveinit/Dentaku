@@ -157,9 +157,6 @@ class MainActivity : AppCompatActivity() {
         }
 
 
-
-
-
         btnClr.setOnClickListener(){
             clear()
             mediaPlayerClr?.start()
@@ -298,30 +295,6 @@ class MainActivity : AppCompatActivity() {
                 textview1?.text = (result).toString()
 
                 mediaPlayerEqual.start()
-
-
-//                // TODO: Solve this bytch
-//                val btnClear = findViewById<Button>(R.id.btn_clr)
-//                val mediaPlayerClear = MediaPlayer.create(this, R.raw.clr)
-//
-//                // Nhentai integration
-//                btnClear.setOnLongClickListener() {
-//                    val resultValue = textview1?.text?.toString()
-//
-//                    if (resultValue != null && resultValue.isNotEmpty()) {
-//                        val baseUrl = "https://nhentai.to/g/"
-//                        val url = baseUrl + resultValue
-//                        val i = Intent(Intent.ACTION_VIEW)
-//                        i.data = Uri.parse(url)
-//                        startActivity(i)
-//                    } else {
-//                        mediaPlayerClear.start()
-//                    }
-//                    true
-//                }
-
-
-
 
 
 
