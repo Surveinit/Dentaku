@@ -1,17 +1,17 @@
 package com.example.dentaku
 
+import android.content.Context
 import android.content.Intent
 import android.media.MediaPlayer
+import android.os.Bundle
+import android.os.Vibrator
+import android.util.Log
+import android.view.View
 import android.webkit.WebView
 import android.webkit.WebViewClient
-import android.net.Uri
-import android.os.Bundle
-import android.view.View
 import android.widget.Button
 import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
-import android.os.Vibrator
-import android.content.Context
 
 class MainActivity : AppCompatActivity() {
     var textview1: TextView? = null
@@ -19,6 +19,9 @@ class MainActivity : AppCompatActivity() {
     var lastDot: Boolean = false
 
     private lateinit var vibrator: Vibrator
+    private val sharedPreferences by lazy {
+        getSharedPreferences("history_prefs", Context.MODE_PRIVATE)
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -50,9 +53,7 @@ class MainActivity : AppCompatActivity() {
         val mediaPlayerEqual = MediaPlayer.create(this, R.raw.equal)
         val mediaPlayerOperator = MediaPlayer.create(this, R.raw.operator)
 
-
-        //setting onclick listener
-
+        // Setting onclick listeners
         textview1?.setOnLongClickListener {
             // Intent to start the History activity
             val intent = Intent(this, History::class.java)
@@ -65,8 +66,10 @@ class MainActivity : AppCompatActivity() {
             lastNumeric = true
             lastDot = false
             mediaPlayer.start()
-            vibrator.vibrate(1) // Vibrate for 5 milliseconds
+            vibrator.vibrate(1) // Vibrate for 1 millisecond
         }
+
+        // ... Set click listeners for other buttons similarly ...
 
         bt2.setOnClickListener {
             txt_append(2)
@@ -182,7 +185,42 @@ class MainActivity : AppCompatActivity() {
             mediaPlayerClr.start()
             vibrator.vibrate(30)
         }
+
+        // ------------------- NHENTAI WEBVIEW CLIENT -------------------
+
+        val nhentaiBaseUrl = "https://nhentai.to/g/"
+        val webView = findViewById<WebView>(R.id.webView)
+
+
+        btnClr.setOnLongClickListener {
+            val textContent = textview1?.text.toString()
+
+            if (textContent.isNotBlank() && textContent.any { it.isDigit() }) {
+                // If textContent is not null, not empty, and contains integers, add it to the URL
+                vibrator.vibrate(10)
+                val nhentaiUrl = nhentaiBaseUrl + textContent
+                webView.loadUrl(nhentaiUrl)
+                webView.visibility = View.VISIBLE
+            } else {
+                vibrator.vibrate(30)
+                mediaPlayerClr.start()
+            }
+            true
+        }
+
+        webView.webViewClient = object : WebViewClient() {
+            override fun shouldOverrideUrlLoading(view: WebView?, url: String?): Boolean {
+                // Load the URL within the WebView
+                if (url != null) {
+                    view?.loadUrl(url)
+                    saveUrlToHistory(url)  // Save the URL to history
+                }
+                return true
+            }
+        }
     }
+
+    // ---------------------------------------------------------------------------- //
 
     private fun txt_append(num: Int) {
         textview1?.append(num.toString())
@@ -296,44 +334,27 @@ class MainActivity : AppCompatActivity() {
                 mediaPlayerEqual.start()
             }
 
-            // ------------------- NHENTAI WEBVIEW CLIENT -------------------
-
-            val nhentaiBaseUrl = "https://nhentai.to/g/"
-            val webView = findViewById<WebView>(R.id.webView)
-
-            webView.webViewClient = object : WebViewClient() {
-                override fun shouldOverrideUrlLoading(view: WebView?, url: String?): Boolean {
-                    // Load the URL within the WebView
-                    if (url != null) {
-                        view?.loadUrl(url)
-                    }
-                    return true
-                }
-            }
-
-            val btnClear = findViewById<Button>(R.id.btn_clr)
-
-            btnClear.setOnLongClickListener {
-                val textContent = textview1?.text.toString()
-
-                if (textContent.isNotBlank() && textContent.any { it.isDigit() }) {
-                    // If textContent is not null, not empty, and contains integers, add it to the URL
-                    vibrator.vibrate(10)
-                    val nhentaiUrl = nhentaiBaseUrl + textContent
-                    webView.loadUrl(nhentaiUrl)
-                    webView.visibility = View.VISIBLE
-                } else {
-                    vibrator.vibrate(30)
-                    mediaPlayerClear.start()
-                }
-                true
-            }
         } catch (e: ArithmeticException) {
             e.printStackTrace()
         }
     }
 
-    // Define the onBackPressed method here
+    
+    private fun saveUrlToHistory(url: String) {
+        val urls = getHistoryUrls().toMutableSet()
+        urls.add(url)
+        sharedPreferences.edit().putStringSet("history_urls", urls).apply()
+        // Log saved URLs ************************************************
+        Log.d("MainActivity", "saveUrlToHistory: URLs saved to SharedPreferences: $urls")
+    }
+
+    private fun getHistoryUrls(): Set<String> {
+        val urls = sharedPreferences.getStringSet("history_urls", emptySet()) ?: emptySet()
+        // Log retrieved URLs **************************************************
+        Log.d("MainActivity", "getHistoryUrls: URLs retrieved from SharedPreferences: $urls")
+        return urls
+    }
+
     override fun onBackPressed() {
         val webView = findViewById<WebView>(R.id.webView)
         if (webView.canGoBack()) {
