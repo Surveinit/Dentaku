@@ -52,6 +52,14 @@ class MainActivity : AppCompatActivity() {
 
 
         //setting onclick listener
+
+        textview1?.setOnLongClickListener {
+            // Intent to start the History activity
+            val intent = Intent(this, History::class.java)
+            startActivity(intent)
+            true
+        }
+
         bt1.setOnClickListener {
             txt_append(1)
             lastNumeric = true
