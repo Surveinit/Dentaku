@@ -10,8 +10,8 @@ android {
         applicationId "com.example.dentaku"
         minSdk 23
         targetSdk 32
-        versionCode 3 // Updated versionCode to 2
-        versionName "2.1" // Updated versionName to 2.0
+        versionCode 4 // Updated versionCode to 2
+        versionName "2.2" // Updated versionName to 2.0
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
     }
 
