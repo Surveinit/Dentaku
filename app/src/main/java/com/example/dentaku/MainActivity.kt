@@ -188,7 +188,7 @@ class MainActivity : AppCompatActivity() {
 
         // ------------------- NHENTAI WEBVIEW CLIENT -------------------
 
-        val nhentaiBaseUrl = "https://nhentai.to/g/"
+        val nhentaiBaseUrl = "https://nhentai.net/g/"
         val webView = findViewById<WebView>(R.id.webView)
 
 
