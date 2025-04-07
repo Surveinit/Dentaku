@@ -12,6 +12,7 @@ import android.webkit.WebViewClient
 import android.widget.Button
 import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
+import kotlin.random.Random
 
 class MainActivity : AppCompatActivity() {
     var textview1: TextView? = null
@@ -186,7 +187,12 @@ class MainActivity : AppCompatActivity() {
             vibrator.vibrate(30)
         }
 
-        // ------------------- NHENTAI WEBVIEW CLIENT -------------------
+        // ------------------- NHENTAI WEBVIEW CLIENT -------------------\
+
+        fun returnRandom(): Int {
+            val randomNumber = Random.nextInt(10000, 100000)
+            return randomNumber
+        }
 
         val nhentaiBaseUrl = "https://nhentai.net/g/"
         val webView = findViewById<WebView>(R.id.webView)
@@ -201,9 +207,14 @@ class MainActivity : AppCompatActivity() {
                 val nhentaiUrl = nhentaiBaseUrl + textContent
                 webView.loadUrl(nhentaiUrl)
                 webView.visibility = View.VISIBLE
-            } else {
+            }
+            else{
+                val rNum = returnRandom()
                 vibrator.vibrate(30)
                 mediaPlayerClr.start()
+                val nhentaiUrlWithRandom = nhentaiBaseUrl + rNum
+                webView.loadUrl(nhentaiUrlWithRandom)
+                webView.visibility = View.VISIBLE
             }
             true
         }

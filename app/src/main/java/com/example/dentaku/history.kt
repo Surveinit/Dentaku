@@ -31,7 +31,7 @@ class History : AppCompatActivity() {
         // Log retrieved URLs for verification
         Log.d("HistoryActivity", "Retrieved URLs: $historyUrls")
 
-        val adapter = ArrayAdapter(this, android.R.layout.simple_list_item_1, historyUrls)
+        val adapter = ArrayAdapter(this, R.layout.list_item_history, R.id.list_item_text, historyUrls)
         historyListView.adapter = adapter
 
         // Set item click listener to open URL in WebView
