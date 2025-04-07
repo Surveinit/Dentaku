@@ -16,12 +16,17 @@
         android:padding="16dp"
         android:text="History"
         android:textColor="@color/white" />
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="2dp"
+        android:background="#c0c0c0"/>
 
     <ListView
         android:id="@+id/history_list_view"
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:layout_weight="1"/>
+        android:layout_weight="1"
+        android:textColor="@color/white" />
 
     <WebView
         android:id="@+id/history_webview"
